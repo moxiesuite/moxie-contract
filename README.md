@@ -31,6 +31,9 @@ module.exports = {
 example
   .setValue(123)
   .on('transactionHash', hash => ... etc ... )
+  .on('receipt', receipt => ... etc ... )
+  .on('error', error => ... etc ... )
+  .on('confirmation', (num, receipt) => ... etc ... )
   .then( receipt => ... etc ... )
 ```
 + Transactions can be funded using web3's wallet
