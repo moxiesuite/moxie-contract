@@ -36,6 +36,18 @@ example
   .on('confirmation', (num, receipt) => ... etc ... )
   .then( receipt => ... etc ... )
 ```
+
++ Events have an EventEmitter interface
+```javascript
+example
+  .ExampleEvent()
+  .on('data', event => ... etc ... )
+
+example
+  .ExampleEvent()
+  .once('data', event => ... etc ... )
+```
+
 + Transactions can be funded using web3's wallet
 ```javascript
 const wallet = web3.eth.accounts.wallet.create(1);
