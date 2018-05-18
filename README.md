@@ -25,7 +25,25 @@ module.exports = {
 };
 ```
 
-**Highlights**
+### ⚠️ Breaking Changes ⚠️
+
+| Category | Web3 0.0 | Web3 1.0 | 
+| ------ | ---- | ------- |
+| addresses (return value) | lower-case | check-summed (mixed-case) |
+| numbers  (return value)  | BigNumber/BN | string |
+| tuples (return value)       | Array | Object w/ named & indexed keys |
+| `.contract` | same as now | completely different |
+|`.at` | sync / then-able | async |
+
+
+------
+**Misc**
+
++ There's a memory leak warning in the tests from EventEmitter. Its origin appears to be web3 instantiation rather than truffle-contract itself. Ganache is also seeing this in their tests.
+
+
+### Highlights
+
 + Methods / `.new` have an EventEmitter interface in addition to returning a promise. 
 ```javascript
 example
