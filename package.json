@@ -1,42 +1,43 @@
 {
-  "name": "truffle-contract",
+  "name": "moxie-contract",
+  "namespace": "moxiesuite",
   "version": "3.0.5",
-  "description": "A better contract abstraction for Ethereum (formerly EtherPudding)",
+  "description": "A better contract abstraction for Vapory (formerly VaporPudding)",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
     "debug": "DEBUG=ganache-core mocha",
-    "compile": "browserify ./index.js -i web3 -o ./dist/truffle-contract.js && uglifyjs ./dist/truffle-contract.js -o ./dist/truffle-contract.min.js"
+    "compile": "browserify ./index.js -i web3 -o ./dist/moxie-contract.js && uglifyjs ./dist/moxie-contract.js -o ./dist/moxie-contract.min.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/truffle-contract.git"
+    "url": "git+https://github.com/moxiesuite/moxie-contract.git"
   },
   "keywords": [
-    "ethereum",
-    "truffle",
+    "vapory",
+    "moxie",
     "contract",
     "abstraction"
   ],
   "author": "Tim Coulter <tim.coulter@consensys.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/trufflesuite/truffle-contract/issues"
+    "url": "https://github.com/moxiesuite/moxie-contract/issues"
   },
-  "homepage": "https://github.com/trufflesuite/truffle-contract#readme",
+  "homepage": "https://github.com/moxiesuite/moxie-contract#readme",
   "dependencies": {
-    "ethjs-abi": "0.1.8",
-    "truffle-blockchain-utils": "^0.0.4",
-    "truffle-contract-schema": "^2.0.0",
-    "truffle-error": "0.0.2",
-    "web3": "^0.20.1"
+    "vapjs-abi": "0.2.0",
+    "moxie-blockchain-utils": "^0.0.4",
+    "moxie-contract-schema": "^2.0.0",
+    "moxie-error": "0.0.2",
+    "@vapory/web3": "0.20.4-b"
   },
   "devDependencies": {
     "async": "^2.3.0",
     "browserify": "^14.0.0",
     "chai": "^3.5.0",
     "debug": "^3.1.0",
-    "ganache-core": "2.1.0-beta.0",
+    "@moxiesuite/ganache-core": "2.1.0-c",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "require-nocache": "^1.0.0",

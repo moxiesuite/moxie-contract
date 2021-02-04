@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script type="text/javascript" src="../node_modules/web3/dist/web3.min.js"></script>
-    <script type="text/javascript" src="./truffle-contract.js"></script>
+    <script type="text/javascript" src="../node_modules/@vapory/web3/dist/web3.min.js"></script>
+    <script type="text/javascript" src="./moxie-contract.js"></script>
     <script>
       window.onload = function() {
-        if (TruffleContract != null) {
+        if (MoxieContract != null) {
           document.body.innerHTML = "Success!"
         } else {
           document.body.innerHTML = "FAILED!"
         }
 
-        console.log(TruffleContract);
+        console.log(MoxieContract);
       };
     </script>
   </head>

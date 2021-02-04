@@ -1,4 +1,4 @@
-var Schema = require("truffle-contract-schema");
+var Schema = require("moxie-contract-schema");
 var Contract = require("./contract.js");
 
 var contract = function(options) {
@@ -12,5 +12,5 @@ var contract = function(options) {
 module.exports = contract;
 
 if (typeof window !== "undefined") {
-  window.TruffleContract = contract;
+  window.MoxieContract = contract;
 }

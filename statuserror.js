@@ -1,8 +1,8 @@
-var TruffleError = require("truffle-error");
+var MoxieError = require("moxie-error");
 var inherits = require("util").inherits;
-var web3 = require("web3");
+var web3 = require("@vapory/web3");
 
-inherits(StatusError, TruffleError);
+inherits(StatusError, MoxieError);
 
 var defaultGas = 90000;
 

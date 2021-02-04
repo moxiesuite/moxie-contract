@@ -1,11 +1,11 @@
-# truffle-contract
+# moxie-contract
 
-Better Ethereum contract abstraction, for Node and the browser.
+Better Vapory contract abstraction, for Node and the browser.
 
 ### Install
 
 ```
-$ npm install truffle-contract
+$ npm install moxie-contract
 ```
 
 ### Features
@@ -17,11 +17,11 @@ $ npm install truffle-contract
 
 ### Usage
 
-First, set up a new web3 provider instance and initialize your contract, then `require("truffle-contract")`. The input to the `contract` function is a JSON blob defined by [truffle-contract-schema](https://github.com/trufflesuite/truffle-contract-schema). This JSON blob is structured in a way that can be passed to all truffle-related projects.
+First, set up a new web3 provider instance and initialize your contract, then `require("moxie-contract")`. The input to the `contract` function is a JSON blob defined by [moxie-contract-schema](https://github.com/moxiesuite/moxie-contract-schema). This JSON blob is structured in a way that can be passed to all moxie-related projects.
 
 ```javascript
 var provider = new Web3.providers.HttpProvider("http://localhost:8545");
-var contract = require("truffle-contract");
+var contract = require("moxie-contract");
 
 var MyContract = contract({
   abi: ...,
@@ -38,7 +38,7 @@ You now have access to the following functions on `MyContract`, as well as many 
 * `deployed()`: Create an instance of `MyContract` that represents the default address managed by `MyContract`.
 * `new()`: Deploy a new version of this contract to the network, getting an instance of `MyContract` that represents the newly deployed instance.
 
-Each instance is tied to a specific address on the Ethereum network, and each instance has a 1-to-1 mapping from Javascript functions to contract functions. For instance, if your Solidity contract had a function defined `someFunction(uint value) {}` (solidity), then you could execute that function on the network like so:
+Each instance is tied to a specific address on the Vapory network, and each instance has a 1-to-1 mapping from Javascript functions to contract functions. For instance, if your Solidity contract had a function defined `someFunction(uint value) {}` (solidity), then you could execute that function on the network like so:
 
   ```javascript
   var deployed;
@@ -52,34 +52,34 @@ Each instance is tied to a specific address on the Ethereum network, and each in
 
 ### Browser Usage
 
-In your `head` element, include Web3 and then include truffle-contract:
+In your `head` element, include Web3 and then include moxie-contract:
 
 ```
 <script type="text/javascript" src="./path/to/web3.min.js"></script>
-<script type="text/javascript" src="./dist/truffle-contract.min.js"></script>
+<script type="text/javascript" src="./dist/moxie-contract.min.js"></script>
 ```
 
 Alternatively, you can use the non-minified versions for easier debugging.
 
-With this usage, `truffle-contract` will be available via the `TruffleContract` object:
+With this usage, `moxie-contract` will be available via the `MoxieContract` object:
 
 ```
-var MyContract = TruffleContract(...);
+var MyContract = MoxieContract(...);
 ```
 
 ### Full Example
 
-Let's use `truffle-contract` with an example contract from [Dapps For Beginners](https://dappsforbeginners.wordpress.com/tutorials/your-first-dapp/). In this case, the abstraction has been saved to a `.sol.js` file by [truffle-artifactor](https://github.com/trufflesuite/truffle-artifactor):
+Let's use `moxie-contract` with an example contract from [Dapps For Beginners](https://dappsforbeginners.wordpress.com/tutorials/your-first-dapp/). In this case, the abstraction has been saved to a `.sol.js` file by [moxie-artifactor](https://github.com/moxiesuite/moxie-artifactor):
 
 ```javascript
-// Require the package that was previosly saved by truffle-artifactor
+// Require the package that was previosly saved by moxie-artifactor
 var MetaCoin = require("./path/to/MetaCoin.sol.js");
 
 // Remember to set the Web3 provider (see above).
 MetaCoin.setProvider(provider);
 
 // In this scenario, two users will send MetaCoin back and forth, showing
-// how truffle-contract allows for easy control flow.
+// how moxie-contract allows for easy control flow.
 var account_one = "5b42bd01ff...";
 var account_two = "e1fd0d4a52...";
 
@@ -94,9 +94,9 @@ MetaCoin.at(contract_address).then(function(instance) {
   // to the account listed as account_two.
   return coin.sendCoin(account_two, 3, {from: account_one});
 }).then(function(result) {
-  // This code block will not be executed until truffle-contract has verified
+  // This code block will not be executed until moxie-contract has verified
   // the transaction has been processed and it is included in a mined block.
-  // truffle-contract will error if the transaction hasn't been processed in 120 seconds.
+  // moxie-contract will error if the transaction hasn't been processed in 120 seconds.
 
   // Since we're using promises, we can return a promise for a call that will
   // check account two's balance.
@@ -137,7 +137,7 @@ This function creates a new instance of the contract abstraction representing th
 
 #### `MyContract.deployed()`
 
-Creates an instance of the contract abstraction representing the contract at its deployed address. The deployed address is a special value given to truffle-contract that, when set, saves the address internally so that the deployed address can be inferred from the given Ethereum network being used. This allows you to write code referring to a specific deployed contract without having to manage those addresses yourself. Like `at()`, `deployed()` is thenable, and will resolve to a contract abstraction instance representing the deployed contract after ensuring that code exists at that location and that that address exists on the network being used.
+Creates an instance of the contract abstraction representing the contract at its deployed address. The deployed address is a special value given to moxie-contract that, when set, saves the address internally so that the deployed address can be inferred from the given Vapory network being used. This allows you to write code referring to a specific deployed contract without having to manage those addresses yourself. Like `at()`, `deployed()` is thenable, and will resolve to a contract abstraction instance representing the deployed contract after ensuring that code exists at that location and that that address exists on the network being used.
 
 #### `MyContract.link(instance)`
 
@@ -231,8 +231,8 @@ The result object that gets returned looks like this:
 {
   tx: "0x6cb0bbb6466b342ed7bc4a9816f1da8b92db1ccf197c3f91914fc2c721072ebd",
   receipt: {
-    // The return value from web3.eth.getTransactionReceipt(hash)
-    // See https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethgettransactionreceipt
+    // The return value from web3.vap.getTransactionReceipt(hash)
+    // See https://github.com/vaporyco/wiki/wiki/JavaScript-API#web3vapgettransactionreceipt
   },
   logs: [
     {
@@ -268,7 +268,7 @@ This isn't very useful in this case, since `setValue()` sets things, and the val
 
 #### Calling getters
 
-However, we can *get* the value using `getValue()`, using `.call()`. Calls are always free and don't cost any Ether, so they're good for calling functions that read data off the blockchain:
+However, we can *get* the value using `getValue()`, using `.call()`. Calls are always free and don't cost any Vapor, so they're good for calling functions that read data off the blockchain:
 
 ```javascript
 instance.getValue.call().then(function(val) {
@@ -277,7 +277,7 @@ instance.getValue.call().then(function(val) {
 });
 ```
 
-Even more helpful, however is we *don't even need* to use `.call` when a function is marked as `constant`, because `truffle-contract` will automatically know that that function can only be interacted with via a call:
+Even more helpful, however is we *don't even need* to use `.call` when a function is marked as `constant`, because `moxie-contract` will automatically know that that function can only be interacted with via a call:
 
 ```javascript
 instance.getValue().then(function(val) {
@@ -298,7 +298,7 @@ instance.setValue(5).then(function(result) {
 });
 ```
 
-#### Sending Ether / Triggering the fallback function
+#### Sending Vapor / Triggering the fallback function
 
 You can trigger the fallback function by sending a transaction to this function:
 
@@ -308,12 +308,12 @@ instance.sendTransaction({...}).then(function(result) {
 });
 ```
 
-This is promisified like all available contract instance functions, and has the same API as `web3.eth.sendTransaction` without the callback. The `to` value will be automatically filled in for you.
+This is promisified like all available contract instance functions, and has the same API as `web3.vap.sendTransaction` without the callback. The `to` value will be automatically filled in for you.
 
-If you only want to send Ether to the contract a shorthand is available:
+If you only want to send Vapor to the contract a shorthand is available:
 
 ```javascript
-instance.send(web3.toWei(1, "ether")).then(function(result) {
+instance.send(web3.toWei(1, "vapor")).then(function(result) {
   // Same result object as above.
 });
 ```
@@ -330,4 +330,4 @@ instance.setValue.estimateGas(5).then(function(result) {
 
 # Testing
 
-This package is the result of breaking up EtherPudding into multiple modules. Tests currently reside within [truffle-artifactor](https://github.com/trufflesuite/truffle-artifactor) but will soon move here.
+This package is the result of breaking up VaporPudding into multiple modules. Tests currently reside within [moxie-artifactor](https://github.com/moxiesuite/moxie-artifactor) but will soon move here.

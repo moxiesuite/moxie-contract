@@ -1,8 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
-var ethJSABI = require("ethjs-abi");
-var BlockchainUtils = require("truffle-blockchain-utils");
-var Web3 = require("web3");
+var vapJSABI = require("vapjs-abi");
+var BlockchainUtils = require("moxie-blockchain-utils");
+var Web3 = require("@vapory/web3");
 var StatusError = require("./statuserror.js")
 
 // For browserified version. If browserify gave us an empty version,
@@ -52,7 +52,7 @@ var contract = (function(module) {
         }
 
         // This function has been adapted from web3's SolidityEvent.decode() method,
-        // and built to work with ethjs-abi.
+        // and built to work with vapjs-abi.
 
         var copy = Utils.merge({}, log);
 
@@ -73,10 +73,10 @@ var contract = (function(module) {
 
         var argTopics = logABI.anonymous ? copy.topics : copy.topics.slice(1);
         var indexedData = "0x" + argTopics.map(function (topics) { return topics.slice(2); }).join("");
-        var indexedParams = ethJSABI.decodeEvent(partialABI(logABI, true), indexedData);
+        var indexedParams = vapJSABI.decodeEvent(partialABI(logABI, true), indexedData);
 
         var notIndexedData = copy.data;
-        var notIndexedParams = ethJSABI.decodeEvent(partialABI(logABI, false), notIndexedData);
+        var notIndexedParams = vapJSABI.decodeEvent(partialABI(logABI, false), notIndexedData);
 
         copy.event = logABI.name;
 
@@ -171,7 +171,7 @@ var contract = (function(module) {
               var start = new Date().getTime();
 
               var make_attempt = function() {
-                C.web3.eth.getTransactionReceipt(tx, function(err, receipt) {
+                C.web3.vap.getTransactionReceipt(tx, function(err, receipt) {
                   if (err && !err.toString().includes('unknown transaction')){
                     return reject(err);
                   }
@@ -271,7 +271,7 @@ var contract = (function(module) {
     }
   };
 
-  // Accepts a contract object created with web3.eth.contract.
+  // Accepts a contract object created with web3.vap.contract.
   // Optionally, if called without `new`, accepts a network_id and will
   // create a new version of the contract abstraction with that network_id set.
   function Contract(contract) {
@@ -281,7 +281,7 @@ var contract = (function(module) {
 
     if (typeof contract == "string") {
       var address = contract;
-      var contract_class = constructor.web3.eth.contract(this.abi);
+      var contract_class = constructor.web3.vap.contract(this.abi);
       contract = contract_class.at(address);
     }
 
@@ -316,7 +316,7 @@ var contract = (function(module) {
 
       tx_params.to = self.address;
 
-      constructor.web3.eth.sendTransaction.apply(constructor.web3.eth, [tx_params, callback]);
+      constructor.web3.vap.sendTransaction.apply(constructor.web3.vap, [tx_params, callback]);
     }, this, constructor);
 
     this.send = function(value) {
@@ -374,7 +374,7 @@ var contract = (function(module) {
         }
       }).then(function() {
         return new Promise(function(accept, reject) {
-          var contract_class = self.web3.eth.contract(self.abi);
+          var contract_class = self.web3.vap.contract(self.abi);
           var tx_params = {};
           var last_arg = args[args.length - 1];
 
@@ -432,7 +432,7 @@ var contract = (function(module) {
           var instance = new self(address);
 
           return new Promise(function(accept, reject) {
-            self.web3.eth.getCode(address, function(err, code) {
+            self.web3.vap.getCode(address, function(err, code) {
               if (err) return reject(err);
 
               if (!code || code.replace("0x", "").replace(/0/g, "") === '') {
@@ -610,7 +610,7 @@ var contract = (function(module) {
 
       json = json || {};
 
-      var temp = function TruffleContract() {
+      var temp = function MoxieContract() {
         this.constructor = temp;
         return Contract.apply(this, arguments);
       };
@@ -962,8 +962,8 @@ var contract = (function(module) {
 })(module || {});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./statuserror.js":79,"ethjs-abi":51,"truffle-blockchain-utils":66,"web3":45}],2:[function(require,module,exports){
-var Schema = require("truffle-contract-schema");
+},{"./statuserror.js":79,"vapjs-abi":51,"moxie-blockchain-utils":66,"@vapory/web3":45}],2:[function(require,module,exports){
+var Schema = require("moxie-contract-schema");
 var Contract = require("./contract.js");
 
 var contract = function(options) {
@@ -977,10 +977,10 @@ var contract = function(options) {
 module.exports = contract;
 
 if (typeof window !== "undefined") {
-  window.TruffleContract = contract;
+  window.MoxieContract = contract;
 }
 
-},{"./contract.js":1,"truffle-contract-schema":67}],3:[function(require,module,exports){
+},{"./contract.js":1,"moxie-contract-schema":67}],3:[function(require,module,exports){
 'use strict';
 
 var KEYWORDS = [
@@ -13364,7 +13364,7 @@ function Result() {}
 
 function encodeParams(types, values) {
   if (types.length !== values.length) {
-    throw new Error('[ethjs-abi] while encoding params, types/values mismatch, types length ' + types.length + ' should be ' + values.length);
+    throw new Error('[vapjs-abi] while encoding params, types/values mismatch, types length ' + types.length + ' should be ' + values.length);
   }
 
   var parts = [];
@@ -13487,7 +13487,7 @@ var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var keccak256 = require('js-sha3').keccak_256;
 
-// from ethereumjs-util
+// from vaporyjs-util
 function stripZeros(aInput) {
   var a = aInput; // eslint-disable-line
   var first = a[0]; // eslint-disable-line
@@ -13521,8 +13521,8 @@ function hexOrBuffer(valueInput, name) {
   var value = valueInput; // eslint-disable-line
   if (!Buffer.isBuffer(value)) {
     if (!isHexString(value)) {
-      var error = new Error(name ? '[ethjs-abi] invalid ' + name : '[ethjs-abi] invalid hex or buffer, must be a prefixed alphanumeric even length hex string');
-      error.reason = '[ethjs-abi] invalid hex string, hex must be prefixed and alphanumeric (e.g. 0x023..)';
+      var error = new Error(name ? '[vapjs-abi] invalid ' + name : '[vapjs-abi] invalid hex or buffer, must be a prefixed alphanumeric even length hex string');
+      error.reason = '[vapjs-abi] invalid hex string, hex must be prefixed and alphanumeric (e.g. 0x023..)';
       error.value = value;
       throw error;
     }
@@ -13553,7 +13553,7 @@ function getKeys(params, key, allowEmpty) {
   var result = []; // eslint-disable-line
 
   if (!Array.isArray(params)) {
-    throw new Error('[ethjs-abi] while getting keys, invalid params value ' + JSON.stringify(params));
+    throw new Error('[vapjs-abi] while getting keys, invalid params value ' + JSON.stringify(params));
   }
 
   for (var i = 0; i < params.length; i++) {
@@ -13562,7 +13562,7 @@ function getKeys(params, key, allowEmpty) {
     if (allowEmpty && !value) {
       value = '';
     } else if (typeof value !== 'string') {
-      throw new Error('[ethjs-abi] while getKeys found invalid ABI data structure, type value not string');
+      throw new Error('[vapjs-abi] while getKeys found invalid ABI data structure, type value not string');
     }
     result.push(value);
   }
@@ -13637,7 +13637,7 @@ function coderFixedBytes(length) {
     },
     decode: function decodeFixedBytes(data, offset) {
       if (data.length < offset + 32) {
-        throw new Error('[ethjs-abi] while decoding fixed bytes, invalid bytes data length: ' + length);
+        throw new Error('[vapjs-abi] while decoding fixed bytes, invalid bytes data length: ' + length);
       }
 
       return {
@@ -13653,7 +13653,7 @@ var coderAddress = {
     var value = valueInput; // eslint-disable-line
     var result = new Buffer(32); // eslint-disable-line
     if (!isHexString(value, 20)) {
-      throw new Error('[ethjs-abi] while encoding address, invalid address value, not alphanumeric 20 byte hex string');
+      throw new Error('[vapjs-abi] while encoding address, invalid address value, not alphanumeric 20 byte hex string');
     }
     value = hexOrBuffer(value);
     result.fill(0);
@@ -13668,7 +13668,7 @@ var coderAddress = {
       };
     }
     if (data.length < offset + 32) {
-      throw new Error('[ethjs-abi] while decoding address data, invalid address data, invalid byte length ' + data.length);
+      throw new Error('[vapjs-abi] while decoding address data, invalid address data, invalid byte length ' + data.length);
     }
     return {
       consumed: 32,
@@ -13687,13 +13687,13 @@ function encodeDynamicBytesHelper(value) {
 
 function decodeDynamicBytesHelper(data, offset) {
   if (data.length < offset + 32) {
-    throw new Error('[ethjs-abi] while decoding dynamic bytes data, invalid bytes length: ' + data.length + ' should be less than ' + (offset + 32));
+    throw new Error('[vapjs-abi] while decoding dynamic bytes data, invalid bytes length: ' + data.length + ' should be less than ' + (offset + 32));
   }
 
   var length = uint256Coder.decode(data, offset).value; // eslint-disable-line
   length = length.toNumber();
   if (data.length < offset + 32 + length) {
-    throw new Error('[ethjs-abi] while decoding dynamic bytes data, invalid bytes length: ' + data.length + ' should be less than ' + (offset + 32 + length));
+    throw new Error('[vapjs-abi] while decoding dynamic bytes data, invalid bytes length: ' + data.length + ' should be less than ' + (offset + 32 + length));
   }
 
   return {
@@ -13733,7 +13733,7 @@ function coderArray(coder, lengthInput) {
       var length = lengthInput; // eslint-disable-line
 
       if (!Array.isArray(value)) {
-        throw new Error('[ethjs-abi] while encoding array, invalid array data, not type Object (Array)');
+        throw new Error('[vapjs-abi] while encoding array, invalid array data, not type Object (Array)');
       }
 
       if (length === -1) {
@@ -13742,7 +13742,7 @@ function coderArray(coder, lengthInput) {
       }
 
       if (length !== value.length) {
-        throw new Error('[ethjs-abi] while encoding array, size mismatch array length ' + length + ' does not equal ' + value.length);
+        throw new Error('[vapjs-abi] while encoding array, size mismatch array length ' + length + ' does not equal ' + value.length);
       }
 
       value.forEach(function (resultValue) {
@@ -13793,7 +13793,7 @@ var paramTypePart = new RegExp(/^((u?int|bytes)([0-9]*)|(address|bool|string)|(\
 function getParamCoder(typeInput) {
   var type = typeInput; // eslint-disable-line
   var coder = null; // eslint-disable-line
-  var invalidTypeErrorMessage = '[ethjs-abi] while getting param coder (getParamCoder) type value ' + JSON.stringify(type) + ' is either invalid or unsupported by ethjs-abi.';
+  var invalidTypeErrorMessage = '[vapjs-abi] while getting param coder (getParamCoder) type value ' + JSON.stringify(type) + ' is either invalid or unsupported by vapjs-abi.';
 
   while (type) {
     var part = type.match(paramTypePart); // eslint-disable-line
@@ -13810,7 +13810,7 @@ function getParamCoder(typeInput) {
         }
         var intSize = parseInt(part[3] || 256); // eslint-disable-line
         if (intSize === 0 || intSize > 256 || intSize % 8 !== 0) {
-          throw new Error('[ethjs-abi] while getting param coder for type ' + type + ', invalid ' + prefix + '<N> width: ' + type);
+          throw new Error('[vapjs-abi] while getting param coder for type ' + type + ', invalid ' + prefix + '<N> width: ' + type);
         }
 
         coder = coderNumber(intSize / 8, prefix === 'int');
@@ -13837,7 +13837,7 @@ function getParamCoder(typeInput) {
         if (part[3]) {
           var size = parseInt(part[3]); // eslint-disable-line
           if (size === 0 || size > 32) {
-            throw new Error('[ethjs-abi] while getting param coder for prefix bytes, invalid type ' + type + ', size ' + size + ' should be 0 or greater than 32');
+            throw new Error('[vapjs-abi] while getting param coder for prefix bytes, invalid type ' + type + ', size ' + size + ' should be 0 or greater than 32');
           }
           coder = coderFixedBytes(size);
         } else {
@@ -15641,7 +15641,7 @@ var Blockchain = {
     var params = [blockNumber, true];
     provider.sendAsync({
       jsonrpc: '2.0',
-      method: 'eth_getBlockByNumber',
+      method: 'vap_getBlockByNumber',
       params: params,
       id: Date.now(),
     }, callback)
@@ -15651,7 +15651,7 @@ var Blockchain = {
     var params = [blockHash, true];
     provider.sendAsync({
       jsonrpc: '2.0',
-      method: 'eth_getBlockByHash',
+      method: 'vap_getBlockByHash',
       params: params,
       id: Date.now(),
     }, callback)
@@ -15876,7 +15876,7 @@ function chain() {
 // Schema module
 //
 
-var TruffleContractSchema = {
+var MoxieContractSchema = {
   // Return a promise to validate a contract object
   // - Resolves as validated `contractObj`
   // - Rejects with list of errors from schema validator
@@ -15951,22 +15951,22 @@ var TruffleContractSchema = {
   }
 };
 
-module.exports = TruffleContractSchema;
+module.exports = MoxieContractSchema;
 
 },{"./package.json":68,"./spec/abi.spec.json":69,"./spec/contract-object.spec.json":70,"./spec/network-object.spec.json":71,"ajv":4,"crypto-js/sha3":49}],68:[function(require,module,exports){
 module.exports={
-  "_from": "truffle-contract-schema@^2.0.0",
-  "_id": "truffle-contract-schema@2.0.0",
+  "_from": "moxie-contract-schema@^2.0.0",
+  "_id": "moxie-contract-schema@2.0.0",
   "_inBundle": false,
   "_integrity": "sha512-nLlspmu1GKDaluWksBwitHi/7Z3IpRjmBYeO9N+T1nVJD2V4IWJaptCKP1NqnPiJA+FChB7+F7pI6Br51/FtXQ==",
-  "_location": "/truffle-contract-schema",
+  "_location": "/moxie-contract-schema",
   "_phantomChildren": {},
   "_requested": {
     "type": "range",
     "registry": true,
-    "raw": "truffle-contract-schema@^2.0.0",
-    "name": "truffle-contract-schema",
-    "escapedName": "truffle-contract-schema",
+    "raw": "moxie-contract-schema@^2.0.0",
+    "name": "moxie-contract-schema",
+    "escapedName": "moxie-contract-schema",
     "rawSpec": "^2.0.0",
     "saveSpec": null,
     "fetchSpec": "^2.0.0"
@@ -15974,16 +15974,16 @@ module.exports={
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/truffle-contract-schema/-/truffle-contract-schema-2.0.0.tgz",
+  "_resolved": "https://registry.npmjs.org/moxie-contract-schema/-/moxie-contract-schema-2.0.0.tgz",
   "_shasum": "535378c0b6a7f58011ea8d84f57771771cb45163",
-  "_spec": "truffle-contract-schema@^2.0.0",
-  "_where": "/Users/gnidan/src/work/release/dependencies/truffle-contract",
+  "_spec": "moxie-contract-schema@^2.0.0",
+  "_where": "/Users/gnidan/src/work/release/dependencies/moxie-contract",
   "author": {
     "name": "Tim Coulter",
     "email": "tim.coulter@consensys.net"
   },
   "bugs": {
-    "url": "https://github.com/trufflesuite/truffle-schema/issues"
+    "url": "https://github.com/moxiesuite/moxie-schema/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
@@ -15997,9 +15997,9 @@ module.exports={
     "mocha": "^3.2.0",
     "solc": "^0.4.16"
   },
-  "homepage": "https://github.com/trufflesuite/truffle-schema#readme",
+  "homepage": "https://github.com/moxiesuite/moxie-schema#readme",
   "keywords": [
-    "ethereum",
+    "vapory",
     "json",
     "schema",
     "contract",
@@ -16007,10 +16007,10 @@ module.exports={
   ],
   "license": "MIT",
   "main": "index.js",
-  "name": "truffle-contract-schema",
+  "name": "moxie-contract-schema",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trufflesuite/truffle-schema.git"
+    "url": "git+https://github.com/moxiesuite/moxie-schema.git"
   },
   "scripts": {
     "test": "mocha"
@@ -16165,7 +16165,7 @@ module.exports={
   "id": "contract-object.spec.json",
   "$schema": "http://json-schema.org/schema#",
   "title": "Contract Object",
-  "description": "Describes a contract consumable by Truffle, possibly including deployed instances on networks",
+  "description": "Describes a contract consumable by Moxie, possibly including deployed instances on networks",
 
   "type": "object",
   "properties": {
@@ -17756,11 +17756,11 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":77,"_process":60,"inherits":76}],79:[function(require,module,exports){
-var TruffleError = require("truffle-error");
+var MoxieError = require("moxie-error");
 var inherits = require("util").inherits;
-var web3 = require("web3");
+var web3 = require("@vapory/web3");
 
-inherits(StatusError, TruffleError);
+inherits(StatusError, MoxieError);
 
 var defaultGas = 90000;
 
@@ -17790,4 +17790,4 @@ function StatusError(args, tx, receipt) {
 }
 
 module.exports = StatusError;
-},{"truffle-error":73,"util":78,"web3":45}]},{},[2]);
+},{"moxie-error":73,"util":78,"@vapory/web3":45}]},{},[2]);

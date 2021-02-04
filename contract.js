@@ -1,6 +1,6 @@
-var ethJSABI = require("ethjs-abi");
-var BlockchainUtils = require("truffle-blockchain-utils");
-var Web3 = require("web3");
+var vapJSABI = require("vapjs-abi");
+var BlockchainUtils = require("moxie-blockchain-utils");
+var Web3 = require("@vapory/web3");
 var StatusError = require("./statuserror.js")
 
 // For browserified version. If browserify gave us an empty version,
@@ -50,7 +50,7 @@ var contract = (function(module) {
         }
 
         // This function has been adapted from web3's SolidityEvent.decode() method,
-        // and built to work with ethjs-abi.
+        // and built to work with vapjs-abi.
 
         var copy = Utils.merge({}, log);
 
@@ -71,10 +71,10 @@ var contract = (function(module) {
 
         var argTopics = logABI.anonymous ? copy.topics : copy.topics.slice(1);
         var indexedData = "0x" + argTopics.map(function (topics) { return topics.slice(2); }).join("");
-        var indexedParams = ethJSABI.decodeEvent(partialABI(logABI, true), indexedData);
+        var indexedParams = vapJSABI.decodeEvent(partialABI(logABI, true), indexedData);
 
         var notIndexedData = copy.data;
-        var notIndexedParams = ethJSABI.decodeEvent(partialABI(logABI, false), notIndexedData);
+        var notIndexedParams = vapJSABI.decodeEvent(partialABI(logABI, false), notIndexedData);
 
         copy.event = logABI.name;
 
@@ -169,7 +169,7 @@ var contract = (function(module) {
               var start = new Date().getTime();
 
               var make_attempt = function() {
-                C.web3.eth.getTransactionReceipt(tx, function(err, receipt) {
+                C.web3.vap.getTransactionReceipt(tx, function(err, receipt) {
                   if (err && !err.toString().includes('unknown transaction')){
                     return reject(err);
                   }
@@ -269,7 +269,7 @@ var contract = (function(module) {
     }
   };
 
-  // Accepts a contract object created with web3.eth.contract.
+  // Accepts a contract object created with web3.vap.contract.
   // Optionally, if called without `new`, accepts a network_id and will
   // create a new version of the contract abstraction with that network_id set.
   function Contract(contract) {
@@ -279,7 +279,7 @@ var contract = (function(module) {
 
     if (typeof contract == "string") {
       var address = contract;
-      var contract_class = constructor.web3.eth.contract(this.abi);
+      var contract_class = constructor.web3.vap.contract(this.abi);
       contract = contract_class.at(address);
     }
 
@@ -314,7 +314,7 @@ var contract = (function(module) {
 
       tx_params.to = self.address;
 
-      constructor.web3.eth.sendTransaction.apply(constructor.web3.eth, [tx_params, callback]);
+      constructor.web3.vap.sendTransaction.apply(constructor.web3.vap, [tx_params, callback]);
     }, this, constructor);
 
     this.send = function(value) {
@@ -372,7 +372,7 @@ var contract = (function(module) {
         }
       }).then(function() {
         return new Promise(function(accept, reject) {
-          var contract_class = self.web3.eth.contract(self.abi);
+          var contract_class = self.web3.vap.contract(self.abi);
           var tx_params = {};
           var last_arg = args[args.length - 1];
 
@@ -430,7 +430,7 @@ var contract = (function(module) {
           var instance = new self(address);
 
           return new Promise(function(accept, reject) {
-            self.web3.eth.getCode(address, function(err, code) {
+            self.web3.vap.getCode(address, function(err, code) {
               if (err) return reject(err);
 
               if (!code || code.replace("0x", "").replace(/0/g, "") === '') {
@@ -608,7 +608,7 @@ var contract = (function(module) {
 
       json = json || {};
 
-      var temp = function TruffleContract() {
+      var temp = function MoxieContract() {
         this.constructor = temp;
         return Contract.apply(this, arguments);
       };

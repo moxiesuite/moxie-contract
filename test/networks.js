@@ -1,5 +1,5 @@
 var assert = require("chai").assert;
-var Schema = require("truffle-contract-schema");
+var Schema = require("moxie-contract-schema");
 var temp = require("temp").track();
 var path = require("path");
 var solc = require("solc");
@@ -10,11 +10,11 @@ process.removeListener("uncaughtException", process.listeners("uncaughtException
 
 var fs = require("fs");
 var requireNoCache = require("require-nocache")(module);
-var debug = require("debug")("ganache-core");
-var TestRPC = require("ganache-core");
-var BlockchainUtils = require("truffle-blockchain-utils");
+var debug = require("debug")("@moxiesuite/ganache-core");
+var TestRPC = require("@moxiesuite/ganache-core");
+var BlockchainUtils = require("moxie-blockchain-utils");
 var contract = require("../");
-var Web3 = require("web3");
+var Web3 = require("@vapory/web3");
 var times = require("async/times");
 
 var log = {
@@ -33,7 +33,7 @@ function getNetworkId(provider, callback) {
 }
 
 function getAndSetAccounts(contract, done) {
-  contract.web3.eth.getAccounts(function(err, accs) {
+  contract.web3.vap.getAccounts(function(err, accs) {
     if (err) return done(err);
 
     contract.defaults({
@@ -116,9 +116,9 @@ describe("Different networks:", function() {
     done();
   });
 
-  it("does not deploy to the same network (eth_getCode)", function(done) {
+  it("does not deploy to the same network (vap_getCode)", function(done) {
     function getCode(firstContract, secondContract, callback) {
-      firstContract.web3.eth.getCode(secondContract.address, callback);
+      firstContract.web3.vap.getCode(secondContract.address, callback);
     }
 
     getCode(ExampleOne, ExampleTwo, function(err, code) {

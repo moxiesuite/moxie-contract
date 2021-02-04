@@ -9,11 +9,11 @@ process.removeListener("uncaughtException", process.listeners("uncaughtException
 
 var fs = require("fs");
 var requireNoCache = require("require-nocache")(module);
-var debug = require("debug")("ganache-core");
-var TestRPC = require("ganache-core");
+var debug = require("debug")("@moxiesuite/ganache-core");
+var TestRPC = require("@moxiesuite/ganache-core");
 var contract = require("../");
 var async = require("async");
-var Schema = require("truffle-contract-schema");
+var Schema = require("moxie-contract-schema");
 
 var log = {
   log: debug

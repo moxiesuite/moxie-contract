@@ -1,6 +1,6 @@
-var debug = require("debug")("ganache-core");
-var ganache = require("ganache-core");
-var Web3 = require("web3");
+var debug = require("debug")("@moxiesuite/ganache-core");
+var ganache = require("@moxiesuite/ganache-core");
+var Web3 = require("@vapory/web3");
 
 var log = {
   log: debug
@@ -21,7 +21,7 @@ var util = {
       web3.setProvider(provider);
       instance.setProvider(provider);
 
-      web3.eth.getAccounts(function(err, accs) {
+      web3.vap.getAccounts(function(err, accs) {
         if (err) reject(err);
 
         instance.defaults({

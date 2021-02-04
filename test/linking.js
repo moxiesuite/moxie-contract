@@ -4,12 +4,12 @@ var temp = require("temp").track();
 var path = require("path");
 var requireNoCache = require("require-nocache")(module);
 var contract = require("../");
-var Web3 = require("web3");
-var debug = require("debug")("ganache-core");
-var TestRPC = require("ganache-core");
+var Web3 = require("@vapory/web3");
+var debug = require("debug")("@moxiesuite/ganache-core");
+var TestRPC = require("@moxiesuite/ganache-core");
 var fs = require("fs");
 var solc = require("solc");
-var Schema = require("truffle-contract-schema");
+var Schema = require("moxie-contract-schema");
 // Clean up after solidity. Only remove solidity's listener,
 // which happens to be the first.
 process.removeListener("uncaughtException", process.listeners("uncaughtException")[0] || function() {});
@@ -130,7 +130,7 @@ describe("Library linking with contract objects", function() {
   });
 
   before(function(done) {
-    web3.eth.getAccounts(function(err, accs) {
+    web3.vap.getAccounts(function(err, accs) {
       accounts = accs;
 
       ExampleLibrary.defaults({

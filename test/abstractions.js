@@ -1,5 +1,5 @@
 var assert = require("chai").assert;
-var Schema = require("truffle-contract-schema");
+var Schema = require("moxie-contract-schema");
 var contract = require("../");
 var temp = require("temp").track();
 var path = require("path");
@@ -134,17 +134,17 @@ describe("Abstractions", function() {
     }).then(function(triggered) {
       assert(triggered == false, "Fallback should not have been triggered yet");
       return example.sendTransaction({
-        value: web3.toWei(1, "ether")
+        value: web3.toWei(1, "vapor")
       });
     }).then(function(results) {
       return new Promise(function(accept, reject) {
-        return web3.eth.getBalance(example.address, function(err, balance) {
+        return web3.vap.getBalance(example.address, function(err, balance) {
           if (err) return reject(err);
           accept(balance);
         });
       });
     }).then(function(balance) {
-      assert(balance == web3.toWei(1, "ether"));
+      assert(balance == web3.toWei(1, "vapor"));
     });
   });
 
@@ -155,16 +155,16 @@ describe("Abstractions", function() {
       return example.fallbackTriggered();
     }).then(function(triggered) {
       assert(triggered == false, "Fallback should not have been triggered yet");
-      return example.send(web3.toWei(1, "ether"));
+      return example.send(web3.toWei(1, "vapor"));
     }).then(function(results) {
       return new Promise(function(accept, reject) {
-        return web3.eth.getBalance(example.address, function(err, balance) {
+        return web3.vap.getBalance(example.address, function(err, balance) {
           if (err) return reject(err);
           accept(balance);
         });
       });
     }).then(function(balance) {
-      assert(balance == web3.toWei(1, "ether"));
+      assert(balance == web3.toWei(1, "vapor"));
     });
   });
 

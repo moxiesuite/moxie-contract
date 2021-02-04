@@ -9,7 +9,7 @@
           "type": "address"
         }
       ],
-      "name": "getBalanceInEth",
+      "name": "getBalanceInVap",
       "outputs": [
         {
           "name": "",
