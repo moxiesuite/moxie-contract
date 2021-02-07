@@ -3,7 +3,7 @@ var Schema = require("moxie-contract-schema");
 var contract = require("../");
 var temp = require("temp").track();
 var path = require("path");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var fs = require("fs");
 var requireNoCache = require("require-nocache")(module);
 var util = require('./util');
@@ -24,7 +24,7 @@ describe("Abstractions", function() {
 
     // Clean up after solidity. Only remove solidity's listener,
     // which happens to be the first.
-    process.removeListener("uncaughtException", process.listeners("uncaughtException")[0]);
+    process.removeListener("uncaughtException", () => process.listeners("uncaughtException")[0] || function() {});
 
     var contractObj, contractName;
     if (result.contracts["Example"]) {
@@ -54,8 +54,10 @@ describe("Abstractions", function() {
   });
 
   it("should set the transaction hash of contract instantiation", function() {
-    return Example.new(1, {gas: 3141592}).then(function(example) {
-      assert(example.transactionHash, "transactionHash should be non-empty");
+    Example.new(1, {gas: 3141592}).then(function(instance) {
+      assert(instance.transactionHash, "transactionHash should be non-empty");
+    }).then(function(result){
+      console.log(result)
     });
   });
 

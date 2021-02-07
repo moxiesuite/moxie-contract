@@ -8,7 +8,7 @@ var Web3 = require("@vapory/web3");
 var debug = require("debug")("@moxiesuite/ganache-core");
 var TestRPC = require("@moxiesuite/ganache-core");
 var fs = require("fs");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 var Schema = require("moxie-contract-schema");
 // Clean up after solidity. Only remove solidity's listener,
 // which happens to be the first.

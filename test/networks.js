@@ -2,7 +2,7 @@ var assert = require("chai").assert;
 var Schema = require("moxie-contract-schema");
 var temp = require("temp").track();
 var path = require("path");
-var solc = require("solc");
+var solc = require("@vapory/solc");
 
 // Clean up after solidity. Only remove solidity's listener,
 // which happens to be the first.

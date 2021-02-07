@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha",
     "debug": "DEBUG=ganache-core mocha",
-    "compile": "browserify ./index.js -i web3 -o ./dist/moxie-contract.js && uglifyjs ./dist/moxie-contract.js -o ./dist/moxie-contract.min.js"
+    "compile": "browserify ./index.js -i @vapory/web3 -o ./dist/moxie-contract.js && terser ./dist/moxie-contract.js -o ./dist/moxie-contract.min.js"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   "dependencies": {
     "vapjs-abi": "0.2.0",
     "moxie-blockchain-utils": "^0.0.4",
-    "moxie-contract-schema": "^2.0.0",
+    "moxie-contract-schema": "^2.0.0-a",
     "moxie-error": "0.0.2",
     "@vapory/web3": "0.20.4-b"
   },
@@ -37,13 +37,12 @@
     "browserify": "^14.0.0",
     "chai": "^3.5.0",
     "debug": "^3.1.0",
-    "@moxiesuite/ganache-core": "2.1.0-c",
+    "@moxiesuite/ganache-core": "2.1.0-f",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "require-nocache": "^1.0.0",
-    "solc": "^0.4.8",
+    "@vapory/solc": "0.4.19",
     "temp": "^0.8.3",
-    "uglify": "^0.1.5",
-    "uglify-js": "^2.7.5"
+    "terser": "5.5.1"
   }
 }
